@@ -52,17 +52,17 @@ async function fetchPhoto() {
       gallery.insertAdjacentHTML('beforeend', makeMarkup(obj.hits));
       lightbox.refresh();
       loadMoreButton.hidden = true;
-      const messageElement = document.createElement('p class="messege"');
+      const messageElement = document.createElement('p');
       messageElement.textContent =
         "We're sorry, but you've reached the end of search results.";
       gallery.insertAdjacentElement('beforeend', messageElement);
       return;
     } else {
       Notify.success(`Hooray! We found totalHits images: ${obj.totalHits}`);
-      gallery.insertAdjacentHTML('beforeend', makeMarkup(obj.hits));
-      lightbox.refresh();
-      loadMoreButton.hidden = false;
     }
+    gallery.insertAdjacentHTML('beforeend', makeMarkup(obj.hits));
+    lightbox.refresh();
+    loadMoreButton.hidden = false;
   } catch (error) {
     console.log(error);
   }
