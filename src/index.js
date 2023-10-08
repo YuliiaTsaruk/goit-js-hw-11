@@ -12,6 +12,8 @@ const BASE_URL = 'https://pixabay.com/api/';
 let lightbox = new SimpleLightbox('.gallery a');
 let searchQuery = '';
 let page = 1;
+let totalImages = 0;
+let totalHitsShown = false;
 
 form.addEventListener('submit', handlerSubmit);
 loadMoreButton.addEventListener('click', handlerLoadMoreBtn);
@@ -19,6 +21,7 @@ loadMoreButton.hidden = true;
 
 async function handlerSubmit(evt) {
   evt.preventDefault();
+  loadMoreButton.hidden = true;
   page = 1;
   gallery.innerHTML = '';
   searchQuery = form.searchQuery.value.trim();
@@ -41,28 +44,33 @@ async function fetchPhoto() {
     });
     const response = await axios.get(`${BASE_URL}?${params}`);
     const obj = response.data;
+    loadMoreButton.hidden = true;
     //   console.log(obj);
     if (obj.hits.length === 0) {
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
       loadMoreButton.hidden = true;
+      gallery.innerHTML = '';
       return;
-    } else if (obj.totalHits < 40) {
-      // Notify.success(`Hooray! We found totalHits images: ${obj.totalHits}`);
+    } else {
       gallery.insertAdjacentHTML('beforeend', makeMarkup(obj.hits));
       lightbox.refresh();
+      loadMoreButton.hidden = false;
+      totalImages += obj.hits.length;
+      if (!totalHitsShown) {
+        Notify.success(`Hooray! We found ${obj.totalHits} images.`);
+        totalHitsShown = true; // Встановлюємо флаг
+      }
+    }
+    if (totalImages >= obj.totalHits) {
+      // Notify.success(`Hooray! We found ${obj.totalHits} images.`);
       loadMoreButton.hidden = true;
       const messageElement = document.createElement('p');
       messageElement.textContent =
         "We're sorry, but you've reached the end of search results.";
       gallery.insertAdjacentElement('beforeend', messageElement);
       return;
-    } else {
-      // Notify.success(`Hooray! We found totalHits images: ${obj.totalHits}`);
-      gallery.insertAdjacentHTML('beforeend', makeMarkup(obj.hits));
-      lightbox.refresh();
-      loadMoreButton.hidden = false;
     }
   } catch (error) {
     console.log(error);
