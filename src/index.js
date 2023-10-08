@@ -46,6 +46,7 @@ async function fetchPhoto() {
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+      loadMoreButton.hidden = true;
       return;
     } else if (obj.totalHits < 40) {
       // Notify.success(`Hooray! We found totalHits images: ${obj.totalHits}`);
