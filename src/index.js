@@ -48,7 +48,7 @@ async function fetchPhoto() {
       );
       return;
     } else if (obj.totalHits < 40) {
-      Notify.success(`Hooray! We found totalHits images: ${obj.totalHits}`);
+      // Notify.success(`Hooray! We found totalHits images: ${obj.totalHits}`);
       gallery.insertAdjacentHTML('beforeend', makeMarkup(obj.hits));
       lightbox.refresh();
       loadMoreButton.hidden = true;
@@ -58,11 +58,11 @@ async function fetchPhoto() {
       gallery.insertAdjacentElement('beforeend', messageElement);
       return;
     } else {
-      Notify.success(`Hooray! We found totalHits images: ${obj.totalHits}`);
+      // Notify.success(`Hooray! We found totalHits images: ${obj.totalHits}`);
+      gallery.insertAdjacentHTML('beforeend', makeMarkup(obj.hits));
+      lightbox.refresh();
+      loadMoreButton.hidden = false;
     }
-    gallery.insertAdjacentHTML('beforeend', makeMarkup(obj.hits));
-    lightbox.refresh();
-    loadMoreButton.hidden = false;
   } catch (error) {
     console.log(error);
   }
